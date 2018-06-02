@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+{% extends "main_app/base.html" %}
+
+
+
+{% block sidemenu %}  
+  <!-- Sidebar -->
+  <div class='w3-sidebar w3-collapse' id='sidenav' style="top:112px;">
+  <div id='leftmenuinner'>
+  <div id='leftmenuinnerinner'>
+      <h2 class="left">ГЛАВЫ</h2>
+      {% for theme in gasthemes %}
+            <a target='_top' href="{% url 'main_app:gasthemetext' theme.id %}">{{ theme }}</a>
+      {% empty %}
+            <li>No themes have been added yet...</li>
+      {% endfor %}  
+  </div>	
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+
+{% block content %}
+
+{% load static %}
+
+
+<title>{{ gastheme }}</title>
+
+
+
+
+
+
+<style>
+#sidenav a.active{
+  background-color:#616161
+  }
+
+.w3-custom{
+  margin-left:200px;
+  }
+
+</style>
+
+
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
+
+<ul style="margin-top:0px">
+    <div class="w3-row w3-padding-64">
+        <div class=" w3-container">
+    {% for theme in gasthemetext %}
+
+
+
+            {% if theme.title != 'no' %}
+            <a name="{{ theme.title }}"></a>
+            <p><br></p>
+
+            <h1 class="w3-text-teal">{{ theme.title }}</h1>
+            {% endif %}
+
+
+            {% if theme.text != 'no' %}
+            <p>{% autoescape off %}{{ theme.text }}{% endautoescape %}</p>
+            {% endif %}
+
+
+
+            <div class="w3-row-padding">
+
+            {% if theme.photo.url != '/media/pictures/pic.bmp' %}
+                <div class="w3-container w3-third">
+                  <img src="{{ theme.photo.url }}"
+                       style="width:100%;height:180px;cursor:pointer"
+                       onclick="onClick(this)"
+                       class="w3-hover-opacity">
+                    {% if theme.photo_text != 'no' %}
+                        <p>{{ theme.photo_text }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if theme.photo2.url != '/media/pictures/pic.bmp' %}
+                <div class="w3-container w3-third">
+                  <img src="{{ theme.photo2.url }}"
+                       style="width:100%;height:180px;cursor:pointer"
+                       onclick="onClick(this)"
+                       class="w3-hover-opacity">
+                    {% if theme.photo2_text != 'no' %}
+                        <p>{{ theme.photo2_text }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if theme.photo3.url != '/media/pictures/pic.bmp' %}
+                <div class="w3-container w3-third">
+                  <img src="{{ theme.photo3.url }}"
+                       style="width:100%;height:180px;cursor:pointer"
+                       onclick="onClick(this)"
+                       class="w3-hover-opacity">
+                    {% if theme.photo3_text != 'no' %}
+                        <p>{{ theme.photo3_text }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            </div>
+
+            <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+                <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+                <div class="w3-modal-content w3-animate-zoom">
+                <img class="w3-modal-content" id="img01" style="width:100%">
+                    <p class="w3-center w3-teal"> xxx  </p>
+                </div>
+            </div>
+
+            {% if user.username == 'user' %}
+
+              <a href="{% url 'main_app:edit_gasthemetext' theme.id %}">
+              <p><button class="w3-button w3-black" >
+                  Edit GasThemeText
+              </button></p>
+              </a>
+            {% endif %}
+
+
+    {% empty %}
+        <li>No themes have been added yet...</li>
+
+
+    {% endfor %}
+        </div>
+</div>
+</ul>
+
+{% if user.username == 'user' %}
+    <div class="w3-center" >
+
+        <a href="{% url 'main_app:new_gasthemetext' gastheme.id %}">
+    <button class="w3-button w3-black" >add a new gasthemetext </button>
+        </a>
+
+    </div>
+{% endif %}
+
+
+<div class="w3-container w3-white">
+<p>КОММЕНТАРИИ:</p><a href="{% url 'main_app:new_gasthemecomment' gastheme.id %}">
+            <button class="w3-button w3-hover-grey w3-dark-grey" >ДОБАВИТЬ</button>
+        </a>
+
+{% for comment in gasthemecomments %}
+    <div class="w3-container w3-panel w3-border w3-light-blue " >
+        <p class="w3-opacity w3-small">{{ comment.date_added|date:'M d, Y H:i' }}</p>
+        <div class="w3-container w3-pale-yellow"><p>{{ comment.text|linebreaks }}</p></div>
+
+        <div class="w3-bar w3-margin-bottom w3-margin-top">
+            <a href="{% url 'main_app:new_gasthemecommentreply' comment.id %}">
+                <button class="w3-button  w3-tiny w3-padding-small w3-dark-grey w3-margin-right">ОТВЕТИТЬ</button>
+            </a>
+            <button class="w3-button w3-dark-grey w3-tiny w3-padding-small" onclick="openReply()">+</button>
+        </div>
+
+
+        {% for reply in comment.gasthemecommentreply_set.all %}
+
+        <div id="reply" class="w3-container w3-pale-blue" style="width:90%;display:none">
+            <p class="w3-opacity w3-tiny">{{ reply.date_added|date:'M d, Y H:i' }}</p>
+            <p class="w3-opacity">{{ reply.text }}</p> </div><br>
+        {% endfor %}
+    </div>
+
+    {% empty %}
+        No comments have been added yet...
+    {% endfor %}
+
+        
+</div>
+
+
+<!-- END MAIN -->
+</div>
+
+
+<script>
+function openReply() {
+        document.getElementById("reply").style.display = "block";
+        }
+</script>
+
+
+<script>
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+}
+</script>
+
+
+
+
+
+
+
+{% endblock content %}

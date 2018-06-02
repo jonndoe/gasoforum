@@ -1,0 +1,68 @@
+{% extends "main_app/base.html" %}
+
+
+
+{% block sidemenu %}  
+  <!-- It is only here to correctly display the nav bar on the page...
+try to delete this block to see the difference..
+it should be fixed finally.  -->
+  <div class='w3-sidebar' id='sidenav' style="display:none">
+  <div id='leftmenuinner' style="display:none">
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+{% block content %}
+
+{% load static %}
+
+
+<div class="w3-container w3-row-padding w3-padding-32 w3-dark-grey">
+    <h2 class="w3-center">ТЕОРИЯ</h2>
+    <div class="w3-panel w3-leftbar w3-dark-grey w3-border-teal">
+    <p class="w3-large" style="font-family:'Segoe UI',Arial,sans-serif">Теория по перевозке сжиженных газов.
+        На английском, написано просто и понятно.
+        Пройдя темы
+    Вы получите необходимые знания что бы приступать к изучению более
+        профессиональной литературы (в том числе и на английском языке,
+    так как большинство книг по этой тематике не имеют перевода
+        ). </p>
+    </div>
+</div>
+
+
+
+<div class="w3-row-padding w3-margin-top">
+    {% for theme in gasthemes %}
+                <div class="w3-quarter">
+                    <div class="w3-card w3-margin-bottom">
+
+                <a href="{% url 'main_app:gasthemetext' theme.id %}">
+                        <img src="{{ theme.photo.url }}" style="width:100%; height:200px" class=" w3-hover-opacity">
+                </a>
+                        <div class="w3-container w3-white w3-center">
+                            <p class="w3-text-teal"> {{ theme }} <br>
+                            <b class="w3-text-black">{{ theme.sub_text }} </b> </p>
+
+                        </div>
+                    </div>
+                </div>
+    {% empty %}
+        <li>No topics have been added yet...</li>
+    {% endfor %}
+</div>
+
+
+    <div class="w3-container w3-row-padding w3-padding-16 w3-theme-l5">
+{% if user.username == 'user' %}
+    <div class="w3-container">
+    <a href="{% url 'main_app:new_gastheme' %}">
+    <button class="w3-button w3-dark-grey" href="{% url 'main_app:new_gastheme' %}">ДОБАВИТЬ!</button>
+    </a>
+     </div>
+{% endif %}
+</div>
+
+{% endblock content %}

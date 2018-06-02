@@ -1,0 +1,27 @@
+{% extends "main_app/base.html" %}
+
+
+{% block sidemenu %}  
+  <!-- It is only here to correctly display the nav bar on the page...
+try to delete this block to see the difference..
+it should be fixed finally.  -->
+  <div class='w3-sidebar' id='sidenav' style="display:none">
+  <div id='leftmenuinner' style="display:none">
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+
+{% block content %}
+    <br><br><br><br><br>
+    <p> Add a new GasTheme: </p>
+    <form action="{% url 'main_app:new_gastheme' %}" method='post', enctype='multipart/form-data'>
+       {% csrf_token %}
+       {{ form.as_p }}
+       <button name="submit"> add gastheme </button> 
+    </form>
+{% endblock content %}
+

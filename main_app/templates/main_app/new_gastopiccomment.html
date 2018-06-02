@@ -1,0 +1,31 @@
+{% extends "main_app/base.html" %}
+
+
+
+
+{% block sidemenu %}  
+  <!-- It is only here to correctly display the nav bar on the page...
+try to delete this block to see the difference..
+it should be fixed finally.  -->
+  <div class='w3-sidebar' id='sidenav' style="display:none">
+  <div id='leftmenuinner' style="display:none">
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+
+{% block content %}
+    <br><br><br>
+
+    <p> <a href="{% url 'main_app:gastopictext' gastopic.id %}"> {{ gastopic }}</a></p>
+
+    <p> Add a new GasTopicComment: </p>
+    <form action="{% url 'main_app:new_gastopiccomment' gastopic.id %}" method='post' enctype='multipart/form-data'>
+       {% csrf_token %}
+       {{ form.as_p }}
+       <button name="submit"> add gastopiccomment </button>
+    </form>
+{% endblock content %}

@@ -1,0 +1,39 @@
+{% extends "main_app/base.html" %}
+
+{% block content %}
+
+   <div class="w3-container " style="margin-top:100px"></div>
+
+   <a onclick="w3_open()" class="w3-button w3-xlarge w3-circle w3-dark-grey" style="position:absolute;top:-28px;right:24px">+</a>
+
+    {% if form.errors %}
+        <div class="w3-container w3-half w3-margin-top" style="margin-top:250px">
+            <div class="w3-container w3-card-4">
+                <p>Your username and password didn't match. Please try again.</p>
+            </div>
+        </div>
+    {% endif %}
+
+        <form method="post" action="{% url 'users:login' %}" class="w3-container w3-card-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+        <p>
+        <input id="milk" class="w3-check" type="checkbox" checked="checked">
+        <label>Stay logged in</label></p>
+
+        <p>
+        <button name="submit" class="w3-button w3-section w3-dark-grey w3-ripple"> Log in </button></p>
+
+        <!-- This is to redirect the user after login -->
+        <input type="hidden" name="next" value="{% url 'users:profile' %}" />
+
+        </form>
+
+         <div class="w3-container " style="margin-top:100px">
+         </div>
+
+
+
+
+{% endblock content %}

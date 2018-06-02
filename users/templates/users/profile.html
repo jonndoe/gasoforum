@@ -1,0 +1,25 @@
+{% extends "main_app/base.html" %}
+
+{% block content %}
+
+
+
+<div class="w3-container " style="margin-top:100px">
+
+<h1> This is your profile page </h1>
+
+
+<h2> You created next GasThemes: </h2>
+<ul>
+    {% for theme in gasthemes %}
+        <li>
+              <a href="{% url 'main_app:gasthemetext' theme.id %}">{{ theme }}</a>
+        </li>
+    {% empty %}
+        <li>You did't create any theme yet....</li>
+    {% endfor %}
+</ul>
+</div>
+<div class="w3-container " style="margin-top:100px">
+</div>
+{% endblock content %}

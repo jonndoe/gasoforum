@@ -1,0 +1,40 @@
+{% extends "main_app/base.html" %}
+
+
+
+
+{% block sidemenu %}  
+  <!-- It is only here to correctly display the nav bar on the page...
+try to delete this block to see the difference..
+it should be fixed finally.  -->
+  <div class='w3-sidebar' id='sidenav' style="display:none">
+  <div id='leftmenuinner' style="display:none">
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+
+
+
+{% block content %}
+
+
+<div class="w3-container w3-dark-grey">
+    <br><br><br>
+    <h2 class="w3-center">НОВЫЙ АЛЬБОМ</h2><br><br>
+</div>
+
+
+<form class="w3-container w3-light-grey w3-center" action="{% url 'main_app:new_photoalbum' %}" method='post' enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit" class="w3-button  w3-hover-grey w3-dark-grey" >СОЗДАТЬ</button>
+</form>
+
+
+<br><br><br><br>
+
+{% endblock content %}

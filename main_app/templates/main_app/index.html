@@ -1,0 +1,81 @@
+{% extends "main_app/base.html" %}
+
+
+
+{% block sidemenu %}  
+  <!-- It is only here to correctly display the nav bar on the page...
+try to delete this block to see the difference..
+it should be fixed finally.  -->
+  <div class='w3-sidebar' id='sidenav' style="display:none">
+  <div id='leftmenuinner' style="display:none">
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+{% block content %}
+{% load static %}
+
+<title>GasoForum</title>
+
+<div class="w3-content" style="max-width:2000px">
+
+<!-- Image Header -->
+<div class="w3-display-container w3-animate-opacity">
+  <img src="{% static 'main_app/index.jpg' %}" alt="gasoforum" style="width:100%;height:650px;">
+  <div class="w3-display-middle w3-large">
+    <p class="w3-xlarge w3-text-white w3-wide">
+   Сжиженный природный газ, пропан, бутан, этилен, пропилен, аммиак и многие
+  другие газы перевозятся в сжиженном состоянии при экстремально низких температурах
+  (до -163 градусов). Через моря и океаны, между городами, странами и континентами...
+  Это сложный высокотехнологичный криогенный процесс.</p>
+  </div>
+</div>
+
+<!-- Work Row -->
+<div class="w3-row-padding w3-padding-64 w3-dark-grey" id="work">
+  <div class="w3-quarter">
+    <h2>На этом сайте </h2>
+      <p class="w3-large">собрано немного материала по перевозке сжиженного газа.
+        Так же приветсвуются обсуждения по теме. Возможно вы можете
+        что то добавить или рассказать из своего опыта. Ждем!</p>
+      <br>
+    <a href="{% url 'main_app:new_gastopic' %}">
+    <button class="w3-button w3-black">РАССКАЗАТЬ!</button>
+    </a>
+  </div>
+
+
+  <div class="w3-row-padding w3-cell w3-mobile">
+<!--ВАЖНЫЙ МОМЕНТ!!!! ЧИТАТЬ КОД ВНИМАТЕЛЬНО, ОРАЩАЕМСЯ ИЗ CHILD CLASSA TO PARANT CLASS!!! -->
+      {% for text in gastextes %}
+      <a href="{% url 'main_app:gastopictext' text.get.gas_topic.id %}">
+      <div class="w3-third w3-container w3-margin-bottom">
+            <img src="{{ text.get.photo.url }}" style="width:295px; height:200px" class=" w3-hover-opacity">
+  <div class="w3-container w3-white">
+    <p><b>{{ text.get.gas_topic }}</b></p>
+    <p>Опубликовано:</p>
+  <h4>{{ text.get.gas_topic.date_added|date:"Y-m-d" }}</h4>
+  <p class="w3-small">ГАЗОФОРУМ</p>
+  </div>
+  </div>
+  </a>
+  {% endfor %}
+  </div>
+
+</div>
+
+   <!-- Section -->
+  <div class="w3-container w3-content w3-center w3-padding-64" style="max-width:800px" id="band">
+    <h2 class="w3-wide">А ГДЕ ВЫ ПОБЫВАЛИ?</h2>
+    <p class="w3-opacity"><i>Да везде!</i></p>
+    <p class="w3-justify w3-large">Поделитесь своими морскими фотографиями (они точно есть!)
+        это интересно, фотоальбому моряка позавидует любой путешественник!</p>
+      <button class="w3-left w3-button w3-dark-grey">СОЗДАТЬ ФОТОАЛЬБОМ!</button><br><br>
+      <p class="w3-justify w3-large">
+    </p><br>
+  </div>
+</div>
+{% endblock content %}

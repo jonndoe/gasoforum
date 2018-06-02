@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+{% extends "main_app/base.html" %}
+
+
+
+
+{% block sidemenu %}  
+  <!-- Sidebar -->
+  <div class='w3-sidebar w3-collapse' id='sidenav' style="top:112px;">
+  <div id='leftmenuinner'>
+  <div id='leftmenuinnerinner'>
+      <h2 class="left">ТОПИКИ</h2>
+      {% for topic in gastopics %}
+            <a target='_top' href="{% url 'main_app:gastopictext' topic.id %}">{{ topic }}</a>
+      {% empty %}
+            <li>No topics have been added yet...</li>
+      {% endfor %}  
+  </div>	
+  </div>
+  </div>
+{% endblock sidemenu %}
+
+
+
+
+
+{% block content %}
+
+{% load static %}
+
+
+<title>{{ gastopic }}</title>
+
+
+
+<style>
+.mySlides {display:none}
+</style>
+
+
+
+
+<style>
+#sidenav a.active{
+  background-color:#616161
+  }
+
+.w3-custom{
+  margin-left:200px;
+  }
+
+</style>
+
+
+
+<!-- Main content: shift it to the right by 200 pixels when the sidebar is visible -->
+<div class="w3-main" style="margin-left:200px">
+    <ul>
+        <div class="w3-row w3-padding-64">
+            <div class=" w3-container">
+            {% for topic in gastopictext %}
+                {% if topic.title != 'no' %}
+                    <a name="{{ topic.title }}"></a>
+                    <p><br></p>
+                    <h1 class="w3-text-teal">{{ topic.title }}</h1>
+                {% endif %}
+                {% if topic.text != 'no' %}
+                    <p>{% autoescape off %}{{ topic.text }}{% endautoescape %}</p>
+                {% endif %}
+                <div class="w3-row-padding">
+                {% if topic.photo.url != '/media/pictures/pic.bmp' %}
+                    <div class="w3-container w3-third">
+                        <img src="{{ topic.photo.url }}"
+                        style="width:100%;height:180px;cursor:pointer"
+                        onclick="openModal();currentDiv(1)"
+                        class="w3-hover-opacity"
+                        alt="{{ topic.photo_text }}">
+                    </div>
+                {% endif %}
+
+                {% if topic.photo2.url != '/media/pictures/pic.bmp' %}
+                    <div class="w3-container w3-third">
+                        <img src="{{ topic.photo2.url }}"
+                        style="width:100%;height:180px;cursor:pointer"
+                        onclick="onClick(this)"
+                        class="w3-hover-opacity"
+                        alt="{{ topic.photo2_text }}">
+                     </div>
+                {% endif %}
+
+                {% if topic.photo3.url != '/media/pictures/pic.bmp' %}
+                    <div class="w3-container w3-third">
+                        <img src="{{ topic.photo3.url }}"
+                        style="width:100%;height:180px;cursor:pointer"
+                        onclick="onClick(this)"
+                        class="w3-hover-opacity"
+                        alt="{{ topic.photo3_text }}">
+                    </div>
+                {% endif %}
+                </div>
+
+                <div id="modal01" class="w3-modal" onclick="this.style.display='none'">
+                    <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+                    <div class="w3-modal-content w3-animate-zoom">
+                        <img class="w3-modal-content" id="img01" style="width:100%;height:500px">
+                        <p id="par01" class="w3-center w3-dark-grey w3-large w3-padding"> {{ topic.title }} </p>
+                    </div>
+                </div>
+
+
+                <div id="myModal" class="w3-modal w3-black w3-animate-zoom">
+                <span class="w3-text-white w3-xxlarge w3-hover-text-grey w3-container w3-display-topright"
+                      onclick="closeModal()"
+                      style="cursor:pointer">×</span>
+                <div class="w3-modal-content">
+                       <div class="w3-content" style="max-width:1200px">
+                           <img class="mySlides" src="{{ topic.photo.url }}" style="width:100%;height:400px">
+                           <img class="mySlides" src="{{ topic.photo2.url }}" style="width:100%;height:400px">
+                           <img class="mySlides" src="{{ topic.photo3.url }}" style="width:100%;height:400px">
+                           <div class="w3-row w3-black w3-center">
+                               <div class="w3-display-container">
+                                   <p id="caption"></p>
+                                       <span class="w3-display-left w3-btn" onclick="plusDivs(-1)">❮</span>
+                                       <span class="w3-display-right w3-btn" onclick="plusDivs(1)">❯</span>
+                               </div>
+                               <div class="w3-col s4">
+                                   <img class="demo w3-opacity w3-hover-opacity-off"
+                                        src="{{ topic.photo.url }}"
+                                        style="width:100%;height:100px"
+                                        onclick="currentDiv(1)"
+                                        alt="{{ topic.photo_text }}">
+                               </div>
+                               <div class="w3-col s4">
+                                   <img class="demo w3-opacity w3-hover-opacity-off"
+                                        src="{{ topic.photo2.url }}"
+                                        style="width:100%;height:100px"
+                                        onclick="currentDiv(2)"
+                                        alt="{{ topic.photo2_text }}">
+                               </div>
+                               <div class="w3-col s4">
+                                   <img class="demo w3-opacity w3-hover-opacity-off"
+                                        src="{{ topic.photo3.url }}"
+                                        style="width:100%;height:100px"
+                                        onclick="currentDiv(3)"
+                                        alt="{{ topic.photo3_text }}">
+                               </div>
+                           </div> <!-- End row -->
+                       </div> <!-- End w3-content -->
+                </div> <!-- End modal content -->
+            </div> <!-- End modal -->
+
+
+            {% if user.username == 'user' %}
+              <div class="w3-container">
+              <a href="{% url 'main_app:edit_gastopictext' topic.id %}">
+              <p><button class="w3-button w3-black" >РЕДАКТИРОВАТЬ АБЗАЦ
+              </button></p>
+              </a>
+              <br>
+              </div>
+            {% endif %}
+
+
+    {% empty %}
+        <li>No themes have been added yet...</li>
+
+
+    {% endfor %}
+        </div>
+</div>
+</ul>
+
+{% if user.username == 'user' %}
+    <div class="w3-container w3-center" >
+        <a href="{% url 'main_app:new_gastopictext' gastopic.id %}">
+    <button class="w3-button w3-black" >НОВЫЙ АБЗАЦ</button>
+        </a>
+    </div>
+    <br><br><br>
+{% endif %}
+
+
+
+
+<div class="w3-container w3-white">
+<p>КОММЕНТАРИИ:</p><a href="{% url 'main_app:new_gastopiccomment' gastopic.id %}">
+            <button class="w3-button w3-hover-grey w3-dark-grey" >ДОБАВИТЬ</button>
+        </a>
+
+{% for comment in gastopiccomments %}
+    <div class="w3-container w3-panel w3-border w3-light-blue " >
+        <p class="w3-opacity w3-small">{{ comment.date_added|date:'M d, Y H:i' }}</p>
+        <div class="w3-container w3-pale-yellow"><p>{{ comment.text|linebreaks }}</p></div>
+
+        <div class="w3-bar w3-margin-bottom w3-margin-top">
+            <a href="{% url 'main_app:new_gasthemecommentreply' comment.id %}">
+                <button class="w3-button w3-tiny w3-padding-small  w3-dark-grey w3-margin-right">ОТВЕТИТЬ</button>
+            </a>
+            <button class="w3-button w3-dark-grey w3-tiny w3-padding-small" onclick="openReply()">+</button>
+        </div>
+
+
+        {% for reply in comment.gastopiccommentreply_set.all %}
+
+        <div id="reply" class="w3-container w3-pale-blue" style="width:90%;display:none">
+            <p class="w3-opacity w3-tiny">{{ reply.date_added|date:'M d, Y H:i' }}</p>
+            <p class="w3-opacity">{{ reply.text }}</p> </div><br>
+        {% endfor %}
+    </div>
+
+    {% empty %}
+        No comments have been added yet...
+    {% endfor %}
+
+        
+</div>
+
+
+
+
+
+
+
+<!-- END MAIN -->
+</div>
+
+
+
+
+
+<script>
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  document.getElementById("par01").innerHTML = element.alt;
+}
+</script>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+}
+</script>
+
+
+<!-- This is some extra script to handle the new modal -->
+<script>
+function openModal() {
+  document.getElementById('myModal').style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById('myModal').style.display = "none";
+}
+
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function currentDiv(n) {
+  showDivs(slideIndex = n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  var captionText = document.getElementById("caption");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+     dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
+
+  }
+  x[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " w3-opacity-off";
+  captionText.innerHTML = dots[slideIndex-1].alt;
+}
+</script>
+
+
+
+
+{% endblock content %}
